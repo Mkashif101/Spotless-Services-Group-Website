@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SSG — Spotless Services Group | Sydney Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+:root{
+  --navy:#0B1D45;
+  --orange:#F47920;
+  --orange2:#FF9B3D;
+  --sky:#3AA3DC;
+  --white:#FFFFFF;
+  --snow:#F7F8FB;
+  --mist:#EEF1F7;
+  --ink:#1A2B4A;
+  --ash:#7A8AA0;
+  --rule:#E2E7F0;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--ink);overflow-x:hidden;}
+
+/* ─── CURSOR ─────────────────────────────── */
+#cur,#cur-ring{position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);border-radius:50%;display:none;}
+#cur{width:10px;height:10px;background:var(--orange);transition:width .18s,height .18s;}
+#cur-ring{z-index:9998;width:34px;height:34px;border:1.5px solid rgba(244,121,32,.45);}
+
+/* ─── NAV ────────────────────────────────── */
+#nav{position:fixed;inset:0 0 auto;z-index:800;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 56px;transition:background .4s,border-color .4s;border-bottom:1px solid transparent;}
+#nav.scrolled{background:rgba(6,18,46,.97);backdrop-filter:blur(16px);border-color:rgba(255,255,255,.06);}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-name{font-family:'DM Serif Display',serif;font-size:21px;color:var(--white);letter-spacing:.3px;}
+.logo-name em{color:var(--orange);font-style:normal;}
+#nav ul{list-style:none;display:flex;align-items:center;gap:36px;}
+#nav ul a{color:rgba(255,255,255,.6);text-decoration:none;font-size:12px;font-weight:500;letter-spacing:.7px;text-transform:uppercase;transition:color .2s;}
+#nav ul a:hover{color:var(--white);}
+.nav-btn{background:var(--orange)!important;color:var(--white)!important;padding:9px 22px;border-radius:3px;font-weight:600!important;}
+.nav-btn:hover{background:var(--orange2)!important;}
+.ham{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px;}
+.ham span{display:block;width:22px;height:2px;background:var(--white);transition:all .3s;}
+
+/* ─── MOB MENU ───────────────────────────── */
+#mob{position:fixed;inset:72px 0 0;background:rgba(5,14,36,.97);backdrop-filter:blur(18px);z-index:700;display:none;flex-direction:column;align-items:center;justify-content:center;gap:36px;}
+#mob.open{display:flex;}
+#mob a{color:rgba(255,255,255,.7);font-size:22px;font-weight:500;text-decoration:none;letter-spacing:.5px;text-transform:uppercase;transition:color .2s;}
+#mob a:hover{color:var(--orange);}
+#mob .mob-cta{background:var(--orange);color:var(--white)!important;padding:14px 32px;border-radius:3px;}
+
+/* ─── HERO — CARTER CARTER STYLE ─────────── */
+#hero{position:relative;height:100vh;overflow:hidden;display:flex;align-items:flex-end;}
+
+/* Cycling background slides */
+.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.4s ease;will-change:opacity;}
+.hero-bg.active{opacity:1;}
+.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,rgba(5,14,36,.88) 0%,rgba(5,14,36,.6) 55%,rgba(5,14,36,.35) 100%);}
+
+/* Grid overlay — subtle texture */
+.hero-grid{position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(rgba(58,163,220,.03) 1px,transparent 1px),
+             linear-gradient(90deg,rgba(58,163,220,.03) 1px,transparent 1px);
+  background-size:80px 80px;}
+
+/* Hero content */
+.hero-content{position:relative;z-index:3;padding:0 56px 80px;width:100%;}
+
+/* Stacked slide text — Carter Carter large cinematic style */
+.hero-slides{position:relative;height:auto;}
+.hslide{position:absolute;left:0;bottom:0;opacity:0;transform:translateY(40px);transition:opacity .9s ease,transform .9s ease;pointer-events:none;}
+.hslide.active{position:relative;opacity:1;transform:translateY(0);pointer-events:auto;}
+.hslide.exit{position:absolute;opacity:0;transform:translateY(-30px);}
+
+.h-pre{font-size:13px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--orange);display:flex;align-items:center;gap:10px;margin-bottom:20px;}
+.h-pre::before{content:'';display:inline-block;width:28px;height:1.5px;background:var(--orange);}
+
+.h-title{font-family:'DM Serif Display',serif;font-size:clamp(58px,8vw,116px);color:var(--white);line-height:.96;letter-spacing:-2px;margin-bottom:28px;}
+.h-title em{color:var(--orange);font-style:normal;}
+.h-title .sky{color:var(--sky);}
+.h-title .ghost{-webkit-text-stroke:1.5px rgba(255,255,255,.25);color:transparent;}
+
+.h-sub{font-size:16px;color:rgba(255,255,255,.5);line-height:1.7;max-width:400px;margin-bottom:36px;}
+.h-btns{display:flex;gap:14px;flex-wrap:wrap;}
+
+/* Hero bottom bar */
+.hero-bar{position:absolute;bottom:0;left:0;right:0;z-index:3;display:flex;align-items:stretch;border-top:1px solid rgba(255,255,255,.08);}
+.hbar-stat{flex:1;padding:20px 28px;border-right:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:4px;}
+.hbar-stat:last-child{border-right:none;}
+.hbar-val{font-family:'DM Serif Display',serif;font-size:28px;color:var(--white);line-height:1;}
+.hbar-val span{color:var(--orange);font-size:20px;}
+.hbar-lbl{font-size:11px;color:rgba(255,255,255,.38);letter-spacing:1.5px;text-transform:uppercase;}
+.hbar-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;display:inline-block;margin-right:6px;animation:pulse 1.8s infinite;}
+
+/* Slide indicator dots */
+.hero-dots{position:absolute;right:56px;top:50%;transform:translateY(-50%);z-index:3;display:flex;flex-direction:column;gap:10px;}
+.hdot{width:3px;height:28px;background:rgba(255,255,255,.2);border-radius:2px;cursor:pointer;transition:background .3s,height .3s;}
+.hdot.active{background:var(--orange);height:44px;}
+
+/* Scroll cue */
+.scroll-cue{position:absolute;bottom:92px;right:56px;z-index:3;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:.5;}
+.scroll-cue span{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--white);writing-mode:vertical-rl;}
+.scroll-line{width:1px;height:48px;background:rgba(255,255,255,.3);position:relative;overflow:hidden;}
+.scroll-line::after{content:'';position:absolute;top:-100%;left:0;width:100%;height:100%;background:var(--orange);animation:scrollLine 1.8s ease infinite;}
+@keyframes scrollLine{0%{top:-100%}100%{top:100%}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ─── SHARED HELPERS ─────────────────────── */
+.btn-fill{display:inline-flex;align-items:center;gap:9px;background:var(--orange);color:var(--white);padding:14px 30px;border-radius:3px;font-size:14px;font-weight:600;text-decoration:none;transition:background .2s,transform .2s,box-shadow .2s;}
+.btn-fill:hover{background:var(--orange2);transform:translateY(-2px);box-shadow:0 10px 28px rgba(244,121,32,.35);}
+.btn-ghost{display:inline-flex;align-items:center;gap:9px;background:transparent;color:rgba(255,255,255,.65);padding:14px 30px;border-radius:3px;font-size:14px;font-weight:500;text-decoration:none;border:1px solid rgba(255,255,255,.2);transition:all .2s;}
+.btn-ghost:hover{color:var(--white);border-color:rgba(255,255,255,.5);transform:translateY(-2px);}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--orange);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.eyebrow::before{content:'';display:inline-block;width:24px;height:1.5px;background:var(--orange);}
+.h2{font-family:'DM Serif Display',serif;font-size:clamp(32px,3.5vw,50px);color:var(--navy);line-height:1.1;letter-spacing:-.3px;}
+.h2 em{color:var(--orange);font-style:normal;}
+.h2w{color:var(--white)!important;}
+.lead{font-size:15px;color:var(--ash);line-height:1.75;max-width:480px;margin-top:14px;}
+
+/* Scroll reveal */
+.sr{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease;}
+.sr.in{opacity:1;transform:translateY(0);}
+.sl{opacity:0;transform:translateX(-32px);transition:opacity .7s ease,transform .7s ease;}
+.sl.in{opacity:1;transform:translateX(0);}
+.sr2{opacity:0;transform:translateX(32px);transition:opacity .7s ease,transform .7s ease;}
+.sr2.in{opacity:1;transform:translateX(0);}
+
+/* ─── MARQUEE ────────────────────────────── */
+.mq{background:var(--orange);padding:13px 0;overflow:hidden;}
+.mq-t{display:flex;animation:mqroll 28s linear infinite;white-space:nowrap;}
+.mq-i{display:inline-flex;align-items:center;font-size:11px;font-weight:600;color:rgba(255,255,255,.9);letter-spacing:2px;text-transform:uppercase;padding:0 28px;}
+.mq-sep{color:rgba(255,255,255,.3);font-size:8px;margin-left:28px;}
+@keyframes mqroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ─── NUMBERS ────────────────────────────── */
+#numbers{background:var(--snow);padding:60px 56px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);}
+.num-g{display:grid;grid-template-columns:repeat(4,1fr);}
+.num-i{padding:0 36px;border-right:1px solid var(--rule);}
+.num-i:first-child{padding-left:0;}
+.num-i:last-child{border-right:none;}
+.num-v{font-family:'DM Serif Display',serif;font-size:50px;color:var(--navy);line-height:1;margin-bottom:4px;}
+.num-v span{color:var(--orange);}
+.num-l{font-size:13px;color:var(--ash);}
+
+/* ─── STATEMENT SECTION (Carter Carter inspired) ─── */
+#statement{background:var(--navy);padding:120px 56px;position:relative;overflow:hidden;}
+#statement::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#06122E 0%,#0B1D45 45%,#0E2657 75%,#091A3A 100%);}
+.stmt-inner{position:relative;z-index:2;max-width:1100px;}
+.stmt-pre{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:32px;}
+.stmt-title{font-family:'DM Serif Display',serif;font-size:clamp(42px,5.5vw,80px);color:var(--white);line-height:1.05;letter-spacing:-1px;}
+.stmt-title em{color:var(--orange);font-style:normal;}
+.stmt-title .ghost{-webkit-text-stroke:1.5px rgba(255,255,255,.2);color:transparent;}
+.stmt-title .sky{color:var(--sky);}
+.stmt-row{display:grid;grid-template-columns:1fr 1fr;gap:80px;margin-top:72px;align-items:start;}
+.stmt-left p{font-size:16px;color:rgba(255,255,255,.5);line-height:1.8;margin-bottom:28px;}
+.stmt-right{}
+.stmt-pillars{display:flex;flex-direction:column;}
+.s-pil{display:flex;align-items:flex-start;gap:16px;padding:20px 0;border-bottom:1px solid rgba(255,255,255,.07);}
+.s-pil:first-child{border-top:1px solid rgba(255,255,255,.07);}
+.s-pil-n{font-family:'DM Serif Display',serif;font-size:13px;color:var(--orange);opacity:.55;min-width:24px;margin-top:2px;}
+.s-pil-body strong{display:block;font-size:14px;font-weight:600;color:var(--white);margin-bottom:3px;}
+.s-pil-body span{font-size:13px;color:rgba(255,255,255,.4);line-height:1.6;}
+
+/* ─── ABOUT ──────────────────────────────── */
+#about{display:grid;grid-template-columns:1fr 1fr;align-items:stretch;min-height:580px;}
+.a-img{position:relative;overflow:hidden;min-height:500px;}
+.a-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 7s ease;}
+.a-img:hover img{transform:scale(1.04);}
+.a-img-ov{position:absolute;inset:0;background:linear-gradient(135deg,rgba(11,29,69,.35) 0%,transparent 65%);}
+.a-txt{padding:80px 68px;display:flex;flex-direction:column;justify-content:center;background:var(--white);}
+.a-pillars{margin-top:36px;}
+.a-pil{display:flex;align-items:flex-start;gap:16px;padding:18px 0;border-bottom:1px solid var(--rule);transition:all .2s;cursor:default;}
+.a-pil:first-child{border-top:1px solid var(--rule);}
+.a-ico{width:36px;height:36px;flex-shrink:0;background:var(--mist);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;transition:background .2s;}
+.a-pil:hover .a-ico{background:rgba(244,121,32,.12);}
+.a-pil strong{display:block;font-size:14px;font-weight:600;color:var(--navy);margin-bottom:2px;}
+.a-pil span{font-size:13px;color:var(--ash);line-height:1.6;}
+
+/* ─── SERVICES ───────────────────────────── */
+#services{background:linear-gradient(160deg,#06122E 0%,#0B1D45 40%,#112560 70%,#07152E 100%);padding:108px 0;overflow:hidden;}
+.svc-hdr{padding:0 56px;display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px;}
+.svc-track{display:flex;gap:18px;padding:0 56px 28px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;cursor:grab;}
+.svc-track::-webkit-scrollbar{display:none;}
+.svc-track:active{cursor:grabbing;}
+.svc-card{flex-shrink:0;width:288px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:32px 28px;scroll-snap-align:start;transition:background .3s,border-color .3s,transform .3s;}
+.svc-card:hover{background:rgba(255,255,255,.08);border-color:rgba(244,121,32,.35);transform:translateY(-5px);}
+.svc-n{font-family:'DM Serif Display',serif;font-size:12px;color:var(--orange);opacity:.6;margin-bottom:16px;display:block;}
+.svc-ico{font-size:26px;margin-bottom:12px;display:block;}
+.svc-card h3{font-family:'DM Serif Display',serif;font-size:18px;color:var(--white);margin-bottom:10px;line-height:1.25;}
+.svc-card p{font-size:13px;color:rgba(255,255,255,.42);line-height:1.7;}
+.svc-line{height:1px;background:rgba(255,255,255,.07);margin:16px 0;transform:scaleX(0);transform-origin:left;transition:transform .4s;}
+.svc-card:hover .svc-line{transform:scaleX(1);}
+.svc-more{font-size:12px;font-weight:600;color:var(--orange);opacity:0;transform:translateX(-8px);transition:opacity .3s,transform .3s;display:flex;align-items:center;gap:6px;}
+.svc-card:hover .svc-more{opacity:1;transform:translateX(0);}
+.svc-arrows{display:flex;gap:8px;}
+.svc-arrows button{width:34px;height:34px;border:1px solid rgba(255,255,255,.12);background:transparent;border-radius:4px;color:rgba(255,255,255,.4);font-size:14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;}
+.svc-arrows button:hover{background:rgba(255,255,255,.08);color:var(--white);border-color:rgba(255,255,255,.3);}
+
+/* ─── SHOWCASE 3D SCROLL ─────────────────── */
+#showcase{background:linear-gradient(175deg,#0E2254 0%,#091A3A 50%,#06122E 100%);}
+.sc-outer{height:2200px;position:relative;}
+.sc-sticky{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;perspective:1200px;overflow:hidden;padding:60px 56px;}
+.sc-head{text-align:center;margin-bottom:44px;}
+.sc-head h2{font-family:'DM Serif Display',serif;font-size:clamp(28px,4vw,50px);color:var(--white);line-height:1.1;}
+.sc-head h2 em{color:var(--orange);font-style:normal;}
+.sc-head p{font-size:14px;color:rgba(255,255,255,.35);margin-top:10px;}
+.sc-card{width:min(960px,90vw);height:min(490px,55vh);border-radius:20px;background:linear-gradient(140deg,#0B1D45,#091530,#0A1A40);border:1px solid rgba(255,255,255,.08);overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.4),0 60px 100px rgba(0,0,0,.25);will-change:transform;display:grid;grid-template-columns:1fr 1fr;opacity:0;transform:rotateX(22deg) scale(.84) translateY(60px);}
+.sc-l{padding:44px 40px;display:flex;flex-direction:column;justify-content:space-between;border-right:1px solid rgba(255,255,255,.06);}
+.sc-tag{display:inline-block;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--orange);border:1px solid rgba(244,121,32,.3);padding:4px 10px;border-radius:2px;margin-bottom:18px;}
+.sc-l h3{font-family:'DM Serif Display',serif;font-size:30px;color:var(--white);line-height:1.2;margin-bottom:12px;}
+.sc-l h3 em{color:var(--sky);font-style:normal;}
+.sc-l p{font-size:13px;color:rgba(255,255,255,.4);line-height:1.7;}
+.sc-metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.sc-m{background:rgba(255,255,255,.04);border-radius:8px;padding:14px;}
+.sc-mv{font-family:'DM Serif Display',serif;font-size:22px;color:var(--white);line-height:1;margin-bottom:3px;}
+.sc-mv em{font-style:normal;font-size:14px;color:var(--orange);}
+.sc-ml{font-size:11px;color:rgba(255,255,255,.3);letter-spacing:.5px;}
+.sc-r{background:linear-gradient(145deg,#0A1E4A,#091530,#07122A);display:flex;align-items:center;justify-content:center;padding:44px;position:relative;overflow:hidden;}
+.sc-glow{position:absolute;top:-40%;right:-30%;width:260px;height:260px;background:radial-gradient(circle,rgba(58,163,220,.13),transparent 65%);}
+.sc-shield{position:relative;z-index:2;filter:drop-shadow(0 0 40px rgba(58,163,220,.3));}
+
+/* ─── SECTORS ────────────────────────────── */
+#sectors{background:var(--snow);padding:108px 56px;}
+.sec-layout{display:grid;grid-template-columns:200px 1fr;gap:64px;margin-top:52px;align-items:start;}
+.sec-nav{display:flex;flex-direction:column;position:sticky;top:88px;}
+.s-tab{display:flex;align-items:center;gap:12px;padding:15px 0;border-bottom:1px solid var(--rule);cursor:pointer;transition:all .2s;}
+.s-tab:first-child{border-top:1px solid var(--rule);}
+.s-ico{width:32px;height:32px;background:var(--mist);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;transition:background .2s;flex-shrink:0;}
+.s-name{font-size:13px;font-weight:500;color:var(--ash);transition:color .2s;}
+.s-arr{margin-left:auto;color:var(--rule);transition:all .2s;font-size:13px;}
+.s-tab.active .s-ico{background:rgba(244,121,32,.12);}
+.s-tab.active .s-name{color:var(--navy);font-weight:600;}
+.s-tab.active .s-arr{color:var(--orange);transform:translateX(3px);}
+.s-panel{display:none;animation:slideIn .35s ease;}
+.s-panel.active{display:block;}
+@keyframes slideIn{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}
+.s-img{width:100%;height:290px;border-radius:12px;overflow:hidden;margin-bottom:26px;}
+.s-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s;}
+.s-img:hover img{transform:scale(1.03);}
+.s-panel h3{font-family:'DM Serif Display',serif;font-size:26px;color:var(--navy);margin-bottom:10px;}
+.s-panel p{font-size:14px;color:var(--ash);line-height:1.75;margin-bottom:20px;}
+.s-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.s-tag{font-size:12px;font-weight:500;color:var(--navy);background:var(--mist);border-radius:100px;padding:5px 14px;}
+
+/* ─── TESTIMONIALS ───────────────────────── */
+#testimonials{background:var(--white);padding:108px 0;overflow:hidden;border-top:1px solid var(--rule);}
+.t-hdr{padding:0 56px;text-align:center;margin-bottom:60px;}
+.t-hdr .lead{margin:0 auto;}
+.t-wrap{position:relative;overflow:hidden;}
+.t-wrap::before,.t-wrap::after{content:'';position:absolute;top:0;bottom:0;width:160px;z-index:2;pointer-events:none;}
+.t-wrap::before{left:0;background:linear-gradient(to right,var(--white),transparent);}
+.t-wrap::after{right:0;background:linear-gradient(to left,var(--white),transparent);}
+.t-track{display:flex;gap:20px;padding:8px 56px 24px;animation:troll 50s linear infinite;width:max-content;}
+.t-track:hover{animation-play-state:paused;}
+@keyframes troll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.t-card{flex-shrink:0;width:310px;background:var(--snow);border:1px solid var(--rule);border-radius:14px;padding:26px;transition:box-shadow .3s,border-color .3s,transform .3s;}
+.t-card:hover{box-shadow:0 12px 40px rgba(13,31,78,.09);border-color:rgba(244,121,32,.25);transform:translateY(-3px);}
+.t-auth{display:flex;align-items:center;gap:11px;margin-bottom:16px;}
+.t-av{width:42px;height:42px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid var(--rule);}
+.t-av img{width:100%;height:100%;object-fit:cover;display:block;}
+.t-name{font-size:14px;font-weight:600;color:var(--navy);line-height:1.2;}
+.t-role{font-size:12px;color:var(--ash);margin-top:1px;}
+.t-stars{color:var(--orange);font-size:13px;letter-spacing:1px;margin-bottom:10px;}
+.t-q{font-size:28px;color:var(--orange);opacity:.2;font-family:'DM Serif Display',serif;line-height:1;margin-bottom:2px;}
+.t-txt{font-size:13px;color:var(--ash);line-height:1.7;}
+
+/* ─── CTA ────────────────────────────────── */
+#cta{background:linear-gradient(135deg,#0B1D45,#091530,#0E2254,#06122E);padding:96px 56px;text-align:center;position:relative;overflow:hidden;}
+#cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 60% at 18% 50%,rgba(244,121,32,.08),transparent 70%),radial-gradient(ellipse 50% 70% at 82% 50%,rgba(58,163,220,.09),transparent 70%);}
+#cta>*{position:relative;z-index:2;}
+#cta h2{font-family:'DM Serif Display',serif;font-size:clamp(32px,4vw,58px);color:var(--white);line-height:1.08;max-width:600px;margin:0 auto 14px;}
+#cta h2 em{color:var(--orange);font-style:normal;}
+#cta>p{font-size:15px;color:rgba(255,255,255,.4);margin-bottom:40px;}
+.cta-btns{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;}
+.cta-tel{font-family:'DM Serif Display',serif;font-size:19px;color:var(--white);text-decoration:none;display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.16);padding:12px 22px;border-radius:3px;transition:all .2s;}
+.cta-tel:hover{border-color:rgba(255,255,255,.45);}
+
+/* ─── CERTIFICATIONS ─────────────────────── */
+#certifications{background:var(--white);padding:108px 56px;}
+.cert-layout{display:grid;grid-template-columns:1fr 1fr;gap:72px;margin-top:52px;align-items:start;}
+.cert-list{display:flex;flex-direction:column;}
+.cert-item{display:flex;align-items:flex-start;gap:16px;padding:24px 0;border-bottom:1px solid var(--rule);transition:all .25s;cursor:default;}
+.cert-item:first-child{border-top:1px solid var(--rule);}
+.cert-n{font-family:'DM Serif Display',serif;font-size:13px;color:var(--orange);opacity:.55;min-width:20px;margin-top:2px;}
+.cert-body strong{display:block;font-size:14px;font-weight:600;color:var(--navy);margin-bottom:4px;}
+.cert-body span{font-size:13px;color:var(--ash);line-height:1.6;}
+.cert-item:hover .cert-body strong{color:var(--orange);}
+.cert-vis{position:sticky;top:88px;}
+.cert-card{background:linear-gradient(135deg,#0B1D45,#0E2254,#091A3A);border-radius:16px;padding:40px 36px;color:var(--white);}
+.cert-card .eyebrow{color:var(--sky);}
+.cert-card .eyebrow::before{background:var(--sky);}
+.cert-card h3{font-family:'DM Serif Display',serif;font-size:26px;margin:0 0 10px;}
+.cert-card p{font-size:13px;color:rgba(255,255,255,.4);line-height:1.7;margin-bottom:26px;}
+.cert-badges{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.cbadge{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:14px;text-align:center;}
+.cbadge-ico{font-size:20px;margin-bottom:5px;}
+.cbadge-name{font-size:11px;color:rgba(255,255,255,.45);letter-spacing:.5px;}
+
+/* ─── CONTACT ────────────────────────────── */
+#contact{background:var(--snow);padding:108px 56px;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start;}
+.con-l h2{font-family:'DM Serif Display',serif;font-size:40px;color:var(--navy);line-height:1.1;margin-bottom:12px;}
+.con-l h2 em{color:var(--orange);font-style:normal;}
+.con-l>p{font-size:15px;color:var(--ash);line-height:1.75;margin-bottom:36px;}
+.c-list{display:flex;flex-direction:column;gap:16px;}
+.c-item{display:flex;align-items:flex-start;gap:13px;}
+.c-ico{width:36px;height:36px;background:rgba(244,121,32,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.c-body strong{display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:2px;}
+.c-body span{font-size:13px;color:var(--ash);}
+.con-form{background:var(--white);border-radius:14px;padding:36px;border:1px solid var(--rule);}
+.f-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+.fg{display:flex;flex-direction:column;gap:5px;}
+.fg.full{grid-column:1/-1;}
+.fg label{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--ash);}
+.fg input,.fg select,.fg textarea{padding:11px 13px;border:1.5px solid var(--rule);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--navy);background:var(--snow);outline:none;transition:border-color .2s,background .2s;width:100%;appearance:none;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--orange);background:var(--white);}
+.fg textarea{resize:vertical;min-height:100px;}
+.btn-sub{width:100%;background:var(--navy);color:var(--white);padding:14px 24px;border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .25s;margin-top:4px;}
+.btn-sub:hover{background:var(--orange);transform:translateY(-1px);box-shadow:0 8px 24px rgba(244,121,32,.3);}
+.con-f-wrap{display:flex;flex-direction:column;gap:13px;}
+
+/* ─── RECON ──────────────────────────────── */
+#recon{background:linear-gradient(135deg,#06122E,#0B1D45,#091A3A);padding:48px 56px;border-top:1px solid rgba(255,255,255,.05);}
+.recon-in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:28px;}
+.r-flags{display:flex;gap:8px;flex-shrink:0;}
+.rflag{width:40px;height:40px;border-radius:50%;overflow:hidden;border:1.5px solid rgba(255,255,255,.15);}
+.rflag img{width:100%;height:100%;object-fit:cover;display:block;}
+.r-txt h5{font-size:13px;font-weight:600;color:rgba(255,255,255,.65);margin-bottom:4px;}
+.r-txt p{font-size:12px;color:rgba(255,255,255,.3);line-height:1.65;}
+
+/* ─── FOOTER ─────────────────────────────── */
+footer{background:linear-gradient(160deg,#040D20,#060F28,#050E24);padding:56px 56px 28px;}
+.ft{display:grid;grid-template-columns:2fr 1fr 1fr;gap:52px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:24px;}
+.fb .fn{font-family:'DM Serif Display',serif;font-size:20px;color:var(--white);}
+.fb .fn em{color:var(--orange);font-style:normal;}
+.fb>p{font-size:13px;color:rgba(255,255,255,.28);line-height:1.7;margin-top:10px;max-width:260px;}
+.fc h5{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:14px;}
+.fc ul{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.fc ul a{color:rgba(255,255,255,.38);font-size:13px;text-decoration:none;transition:color .2s;}
+.fc ul a:hover{color:var(--orange);}
+.fb-bot{display:flex;justify-content:space-between;align-items:center;}
+.fb-bot p,.fb-bot span{font-size:12px;color:rgba(255,255,255,.18);}
+
+/* ─── RESPONSIVE ─────────────────────────── */
+@media(max-width:1100px){
+  .stmt-row{grid-template-columns:1fr;}
+  #about{grid-template-columns:1fr;} .a-img{min-height:300px;}
+  .sec-layout{grid-template-columns:1fr;} .sec-nav{position:static;}
+  .cert-layout{grid-template-columns:1fr;} .cert-vis{position:static;}
+  #contact{grid-template-columns:1fr;}
+  .ft{grid-template-columns:1fr 1fr;} .fb{grid-column:1/-1;}
+  .num-g{grid-template-columns:1fr 1fr;gap:28px;} .num-i{border-right:none;padding:0;}
+  .hero-bar{display:none;}
+  .hero-dots{right:20px;}
+}
+@media(max-width:768px){
+  #nav{padding:0 20px;}
+  #nav ul{display:none;}
+  .ham{display:flex;}
+  .hero-content{padding:0 20px 60px;}
+  .h-title{font-size:clamp(42px,12vw,72px);}
+  #numbers{padding:48px 20px;}
+  .a-txt{padding:48px 24px;}
+  #services,.svc-hdr,.svc-track{padding-left:20px;padding-right:20px;}
+  .sc-outer{height:1400px;}
+  .sc-sticky{padding:40px 20px;}
+  .sc-card{grid-template-columns:1fr;height:auto;}
+  .sc-r{display:none;}
+  #sectors,#testimonials,#cta,#certifications,#contact,#recon,footer{padding-left:20px;padding-right:20px;}
+  .t-hdr{padding:0 20px;}
+  .stmt-title{font-size:clamp(36px,9vw,60px);}
+  #statement{padding:80px 20px;}
+  .ft{grid-template-columns:1fr;gap:28px;}
+  .f-grid{grid-template-columns:1fr;}
+  .scroll-cue{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- ═══ NAV ═══════════════════════════════ -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">
+    <svg width="32" height="38" viewBox="0 0 32 38" fill="none">
+      <path d="M16 1C16 1 3 7 3 19C3 30 8.5 36 16 38C23.5 36 29 30 29 19C29 7 16 1 16 1Z" fill="#3AA3DC"/>
+      <circle cx="16" cy="22" r="5" fill="#F47920" stroke="#0B1D45" stroke-width="1.6"/>
+      <circle cx="16" cy="22" r="2.2" fill="#3AA3DC"/>
+      <path d="M9 19Q12.5 15.5 16 19Q19.5 22.5 23 19" stroke="#F47920" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <path d="M14 11L15.5 7L17 11" stroke="white" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+    </svg>
+    <span class="logo-name">SS<em>G</em></span>
+  </a>
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#sectors">Sectors</a></li>
+    <li><a href="#testimonials">Testimonials</a></li>
+    <li><a href="#certifications">Certifications</a></li>
+    <li><a href="#contact" class="nav-btn">Get a Quote</a></li>
+  </ul>
+  <button class="ham" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- mobile menu -->
+<div id="mob">
+  <a href="#about" class="mob-l">About</a>
+  <a href="#services" class="mob-l">Services</a>
+  <a href="#sectors" class="mob-l">Sectors</a>
+  <a href="#testimonials" class="mob-l">Testimonials</a>
+  <a href="#certifications" class="mob-l">Certifications</a>
+  <a href="#contact" class="mob-l mob-cta">Get a Quote</a>
+</div>
+
+<!-- ═══ HERO — CARTER CARTER STYLE ════════ -->
+<section id="hero">
+
+  <!-- Cycling backgrounds -->
+  <div class="hero-bg active" id="bg0" style="background-image:url('https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1800&q=85&auto=format&fit=crop')"></div>
+  <div class="hero-bg" id="bg1" style="background-image:url('https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=1800&q=85&auto=format&fit=crop')"></div>
+  <div class="hero-bg" id="bg2" style="background-image:url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1800&q=85&auto=format&fit=crop')"></div>
+  <div class="hero-bg" id="bg3" style="background-image:url('https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1800&q=85&auto=format&fit=crop')"></div>
+
+  <div class="hero-grid"></div>
+
+  <!-- Slide indicator dots -->
+  <div class="hero-dots">
+    <div class="hdot active" data-i="0"></div>
+    <div class="hdot" data-i="1"></div>
+    <div class="hdot" data-i="2"></div>
+    <div class="hdot" data-i="3"></div>
+  </div>
+
+  <!-- Scroll cue -->
+  <div class="scroll-cue">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+
+  <!-- Text slides -->
+  <div class="hero-content">
+    <div class="hero-slides" id="hslides">
+
+      <!-- Slide 0 -->
+      <div class="hslide active" id="hs0">
+        <div class="h-pre">Sydney's Trusted Security Partner</div>
+        <h1 class="h-title">
+          Protecting<br>
+          <em>What</em><br>
+          <span class="sky">Matters Most</span>
+        </h1>
+        <p class="h-sub">Professional security solutions across Sydney and NSW — tailored to protect your people, assets, and peace of mind.</p>
+        <div class="h-btns">
+          <a href="#contact" class="btn-fill">Request a Quote <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+          <a href="#services" class="btn-ghost">Our Services</a>
+        </div>
+      </div>
+
+      <!-- Slide 1 -->
+      <div class="hslide" id="hs1">
+        <div class="h-pre">24 / 7 / 365</div>
+        <h1 class="h-title">
+          Always<br>
+          <span class="ghost">On</span><br>
+          <em>Guard</em>
+        </h1>
+        <p class="h-sub">Our command centre never sleeps. Real-time alarm monitoring, live CCTV feeds, and rapid-response teams — around the clock.</p>
+        <div class="h-btns">
+          <a href="#services" class="btn-fill">View Services <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="hslide" id="hs2">
+        <div class="h-pre">Licensed · Insured · Certified</div>
+        <h1 class="h-title">
+          <span class="ghost">Security</span><br>
+          <em>Built</em><br>
+          on Trust
+        </h1>
+        <p class="h-sub">Master Licence M/L 000 102 484. ISO certified. ASIAL member. Every engagement backed by Australia's highest professional standards.</p>
+        <div class="h-btns">
+          <a href="#certifications" class="btn-fill">Our Credentials <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="hslide" id="hs3">
+        <div class="h-pre">Rapid Response · Every Time</div>
+        <h1 class="h-title">
+          <em>Under</em><br>
+          <span class="sky">6</span><br>
+          Minutes
+        </h1>
+        <p class="h-sub">Average response time under 6 minutes. 34 active patrol units. 247 sites monitored. When every second counts — SSG delivers.</p>
+        <div class="h-btns">
+          <a href="#contact" class="btn-fill">Get Protected <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom stats bar -->
+    <div class="hero-bar">
+      <div class="hbar-stat">
+        <div class="hbar-val">247<span>+</span></div>
+        <div class="hbar-lbl">Sites monitored</div>
+      </div>
+      <div class="hbar-stat">
+        <div class="hbar-val"><span class="hbar-dot"></span>Online</div>
+        <div class="hbar-lbl">All alarm systems</div>
+      </div>
+      <div class="hbar-stat">
+        <div class="hbar-val">34</div>
+        <div class="hbar-lbl">Active patrol units</div>
+      </div>
+      <div class="hbar-stat">
+        <div class="hbar-val">&lt;6<span>m</span></div>
+        <div class="hbar-lbl">Avg. response time</div>
+      </div>
+      <div class="hbar-stat">
+        <div class="hbar-val">1.2<span>k</span></div>
+        <div class="hbar-lbl">CCTV feeds live</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ MARQUEE ═════════════════════════════ -->
+<div class="mq"><div class="mq-t">
+  <span class="mq-i">Security Consulting</span><span class="mq-sep">◆</span>
+  <span class="mq-i">Guarding &amp; Patrol</span><span class="mq-sep">◆</span>
+  <span class="mq-i">Alarm Monitoring</span><span class="mq-sep">◆</span>
+  <span class="mq-i">Surveillance Systems</span><span class="mq-sep">◆</span>
+  <span class="mq-i">Access Control</span><span class="mq-sep">◆</span>
+  <span class="mq-i">Event Security</span><span class="mq-sep">◆</span>
+  <span class="mq-i">Risk Assessment</span><span class="mq-sep">◆</span>
+  <span class="mq-i">Emergency Response</span><span class="mq-sep">◆</span>
+  <span class="mq-i">Cybersecurity</span><span class="mq-sep">◆</span>
+  <span class="mq-i">Training &amp; Education</span><span class="mq-sep">◆</span>
+  <span class="mq-i">Security Consulting</span><span class="mq-sep">◆</span>
+  <span class="mq-i">Guarding &amp; Patrol</span><span class="mq-sep">◆</span>
+  <span class="mq-i">Alarm Monitoring</span><span class="mq-sep">◆</span>
+  <span class="mq-i">Surveillance Systems</span><span class="mq-sep">◆</span>
+  <span class="mq-i">Access Control</span><span class="mq-sep">◆</span>
+  <span class="mq-i">Event Security</span><span class="mq-sep">◆</span>
+  <span class="mq-i">Risk Assessment</span><span class="mq-sep">◆</span>
+  <span class="mq-i">Emergency Response</span><span class="mq-sep">◆</span>
+  <span class="mq-i">Cybersecurity</span><span class="mq-sep">◆</span>
+  <span class="mq-i">Training &amp; Education</span><span class="mq-sep">◆</span>
+</div></div>
+
+<!-- ═══ NUMBERS ══════════════════════════════ -->
+<div id="numbers">
+  <div class="num-g">
+    <div class="num-i sr"><div class="num-v">24<span>/7</span></div><div class="num-l">Always-on monitoring</div></div>
+    <div class="num-i sr" style="transition-delay:.08s"><div class="num-v">500<span>+</span></div><div class="num-l">Clients protected</div></div>
+    <div class="num-i sr" style="transition-delay:.16s"><div class="num-v">10<span>+</span></div><div class="num-l">Years experience</div></div>
+    <div class="num-i sr" style="transition-delay:.24s"><div class="num-v">&lt;6<span>m</span></div><div class="num-l">Avg. response time</div></div>
+  </div>
+</div>
+
+<!-- ═══ STATEMENT ════════════════════════════ -->
+<section id="statement">
+  <div class="stmt-inner sr">
+    <div class="stmt-pre">About Spotless Services Group</div>
+    <h2 class="stmt-title">
+      A brand is the<br>
+      <em>PROTECTION</em><br>
+      it <span class="ghost">provides</span>
+    </h2>
+    <div class="stmt-row">
+      <div class="stmt-left">
+        <p>Spotless Services Group is a licensed Australian security firm headquartered in Bankstown, Sydney. We deliver intelligent, scalable security solutions for businesses, government, and communities across NSW.</p>
+        <p>We apply a risk-first methodology — assessing, designing, and deploying the right security strategy for each client's unique environment. From a single site to an enterprise portfolio, SSG brings calm, precision, and expertise.</p>
+        <a href="#contact" class="btn-fill" style="margin-top:8px">Work with SSG <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+      <div class="stmt-right">
+        <div class="stmt-pillars">
+          <div class="s-pil"><span class="s-pil-n">01</span><div class="s-pil-body"><strong>Licensed &amp; Certified</strong><span>Master Licence M/L 000 102 484 · ISO 9001, 14001 &amp; 45001</span></div></div>
+          <div class="s-pil"><span class="s-pil-n">02</span><div class="s-pil-body"><strong>Tailored Risk Strategies</strong><span>Custom security designed around your specific risk profile and operational needs</span></div></div>
+          <div class="s-pil"><span class="s-pil-n">03</span><div class="s-pil-body"><strong>24/7 Command Centre</strong><span>Round-the-clock monitoring with rapid-deployment response teams across NSW</span></div></div>
+          <div class="s-pil"><span class="s-pil-n">04</span><div class="s-pil-body"><strong>ASIAL Member</strong><span>Active member of Australia's peak security industry association since inception</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ABOUT ════════════════════════════════ -->
+<section id="about" style="padding:0">
+  <div class="a-img sl">
+    <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=900&q=80&auto=format&fit=crop" alt="SSG security professionals"/>
+    <div class="a-img-ov"></div>
+  </div>
+  <div class="a-txt">
+    <div class="sr2">
+      <div class="eyebrow">Our People</div>
+      <h2 class="h2">Security built on <em>trust</em></h2>
+      <p class="lead">Our officers, consultants, and command team bring decades of combined experience across government, corporate, and community security environments.</p>
+      <div class="a-pillars">
+        <div class="a-pil"><div class="a-ico">🛡️</div><div><strong>Vetted &amp; Licensed Officers</strong><span>All personnel hold current NSW Security Licences and undergo rigorous background checks</span></div></div>
+        <div class="a-pil"><div class="a-ico">📡</div><div><strong>Technology-Led Operations</strong><span>Integrated alarm, CCTV, and access control platforms managed from our command centre</span></div></div>
+        <div class="a-pil"><div class="a-ico">🎯</div><div><strong>Incident-Free Record</strong><span>Consistent performance across 500+ client sites with industry-leading response metrics</span></div></div>
+        <div class="a-pil"><div class="a-ico">📋</div><div><strong>Transparent Reporting</strong><span>Detailed incident reports, site audits, and operational dashboards delivered to every client</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SERVICES ══════════════════════════════ -->
+<section id="services">
+  <div class="svc-hdr">
+    <div class="sr">
+      <div class="eyebrow" style="color:rgba(255,255,255,.4)"><span style="display:inline-block;width:22px;height:1.5px;background:rgba(255,255,255,.25);margin-right:10px;vertical-align:middle"></span>Our Services</div>
+      <h2 class="h2 h2w">What we <em>deliver</em></h2>
+    </div>
+    <div class="svc-arrows">
+      <button id="sp">&#8592;</button>
+      <button id="sn">&#8594;</button>
+    </div>
+  </div>
+  <div class="svc-track" id="svc-t">
+    <div class="svc-card"><span class="svc-n">01</span><span class="svc-ico">🔍</span><h3>Security Consulting</h3><div class="svc-line"></div><p>Expert consultants assess vulnerabilities and build customised risk-mitigation strategies aligned to your operations.</p><div class="svc-more">Enquire <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div></div>
+    <div class="svc-card"><span class="svc-n">02</span><span class="svc-ico">🛡️</span><h3>Guarding &amp; Patrol</h3><div class="svc-line"></div><p>Trained officers for on-site guarding, access control, and perimeter monitoring with rapid incident response.</p><div class="svc-more">Enquire <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div></div>
+    <div class="svc-card"><span class="svc-n">03</span><span class="svc-ico">🔔</span><h3>Alarm Monitoring</h3><div class="svc-line"></div><p>State-of-the-art alarm systems monitored 24/7 with professionals responding to every alert instantly.</p><div class="svc-more">Enquire <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div></div>
+    <div class="svc-card"><span class="svc-n">04</span><span class="svc-ico">📹</span><h3>Surveillance Systems</h3><div class="svc-line"></div><p>CCTV, video analytics, and remote monitoring for continuous surveillance and criminal deterrence.</p><div class="svc-more">Enquire <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div></div>
+    <div class="svc-card"><span class="svc-n">05</span><span class="svc-ico">🔐</span><h3>Access Control</h3><div class="svc-line"></div><p>Latest technology to regulate entry with full audit trails of every access event logged securely.</p><div class="svc-more">Enquire <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div></div>
+    <div class="svc-card"><span class="svc-n">06</span><span class="svc-ico">🎪</span><h3>Event Security</h3><div class="svc-line"></div><p>Specialised security for corporate events, concerts, and gatherings — protecting attendees, staff, and assets.</p><div class="svc-more">Enquire <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div></div>
+    <div class="svc-card"><span class="svc-n">07</span><span class="svc-ico">📊</span><h3>Risk Assessment</h3><div class="svc-line"></div><p>Thorough threat identification and risk analysis feeding into comprehensive management strategies.</p><div class="svc-more">Enquire <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div></div>
+    <div class="svc-card"><span class="svc-n">08</span><span class="svc-ico">🚨</span><h3>Emergency Response</h3><div class="svc-line"></div><p>Custom emergency plans for disasters, intrusions, and critical incidents — fast, coordinated action every time.</p><div class="svc-more">Enquire <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div></div>
+    <div class="svc-card"><span class="svc-n">09</span><span class="svc-ico">💻</span><h3>Cybersecurity</h3><div class="svc-line"></div><p>Protecting digital assets through risk assessments, hardened defences, and policy alignment.</p><div class="svc-more">Enquire <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div></div>
+    <div class="svc-card"><span class="svc-n">10</span><span class="svc-ico">🎓</span><h3>Training &amp; Education</h3><div class="svc-line"></div><p>Tailored programs for personnel and management to enhance security awareness and response skills.</p><div class="svc-more">Enquire <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div></div>
+  </div>
+</section>
+
+<!-- ═══ SHOWCASE 3D ════════════════════════ -->
+<section id="showcase" style="padding:0">
+  <div class="sc-outer">
+    <div class="sc-sticky">
+      <div class="sc-head" id="sc-head">
+        <h2>Advanced <em>Command Centre</em> Operations</h2>
+        <p>Real-time threat detection &nbsp;·&nbsp; Integrated response &nbsp;·&nbsp; Full-spectrum coverage</p>
+      </div>
+      <div class="sc-card" id="sc-card">
+        <div class="sc-l">
+          <div>
+            <div class="sc-tag">24/7 Monitoring</div>
+            <h3>Intelligent <em>Security</em> at Scale</h3>
+            <p>Our state-of-the-art command centre integrates alarm systems, CCTV networks, and rapid response coordination to keep your assets protected around the clock.</p>
+          </div>
+          <div class="sc-metrics">
+            <div class="sc-m"><div class="sc-mv">247<em>+</em></div><div class="sc-ml">Sites monitored</div></div>
+            <div class="sc-m"><div class="sc-mv">&lt;6<em>m</em></div><div class="sc-ml">Response time</div></div>
+            <div class="sc-m"><div class="sc-mv">1.2<em>k</em></div><div class="sc-ml">CCTV feeds live</div></div>
+            <div class="sc-m"><div class="sc-mv">99<em>%</em></div><div class="sc-ml">System uptime</div></div>
+          </div>
+        </div>
+        <div class="sc-r">
+          <div class="sc-glow"></div>
+          <div class="sc-shield">
+            <svg width="130" viewBox="0 0 160 200" fill="none">
+              <path d="M80 4L8 36V100C8 148 80 196 80 196S152 148 152 100V36Z" fill="url(#sg)" stroke="rgba(58,163,220,.3)" stroke-width="1.5"/>
+              <path d="M80 22L26 50V100C26 138 80 176 80 176S134 138 134 100V50Z" fill="rgba(11,29,69,.65)"/>
+              <circle cx="80" cy="100" r="32" stroke="rgba(58,163,220,.2)" stroke-width="1.5" stroke-dasharray="4 4"/>
+              <circle cx="80" cy="100" r="48" stroke="rgba(58,163,220,.1)" stroke-width="1" stroke-dasharray="3 7"/>
+              <path d="M56 100L73 118L108 80" stroke="#F47920" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+              <defs><linearGradient id="sg" x1="8" y1="4" x2="152" y2="196" gradientUnits="userSpaceOnUse"><stop stop-color="#1A3A7A"/><stop offset="1" stop-color="#0B1D45"/></linearGradient></defs>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTORS ═══════════════════════════ -->
+<section id="sectors">
+  <div class="sr">
+    <div class="eyebrow">Industries We Serve</div>
+    <h2 class="h2">Trusted <em>across all sectors</em></h2>
+    <p class="lead">From government facilities to residential communities, SSG delivers specialised security for every industry.</p>
+  </div>
+  <div class="sec-layout">
+    <div class="sec-nav">
+      <div class="s-tab active" data-p="commercial"><div class="s-ico">🏢</div><span class="s-name">Commercial</span><span class="s-arr">→</span></div>
+      <div class="s-tab" data-p="retail"><div class="s-ico">🏪</div><span class="s-name">Retail</span><span class="s-arr">→</span></div>
+      <div class="s-tab" data-p="government"><div class="s-ico">🏛️</div><span class="s-name">Government</span><span class="s-arr">→</span></div>
+      <div class="s-tab" data-p="healthcare"><div class="s-ico">🏥</div><span class="s-name">Healthcare</span><span class="s-arr">→</span></div>
+      <div class="s-tab" data-p="education"><div class="s-ico">🎓</div><span class="s-name">Education</span><span class="s-arr">→</span></div>
+      <div class="s-tab" data-p="industrial"><div class="s-ico">🏭</div><span class="s-name">Industrial</span><span class="s-arr">→</span></div>
+    </div>
+    <div>
+      <div class="s-panel active" id="p-commercial"><div class="s-img"><img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80&auto=format&fit=crop" alt="Commercial"/></div><h3>Commercial Property</h3><p>Protecting office towers, business parks, and corporate headquarters with tailored access control, CCTV, and on-site personnel.</p><div class="s-tags"><span class="s-tag">Office Buildings</span><span class="s-tag">Business Parks</span><span class="s-tag">Corporate HQ</span><span class="s-tag">Shopping Centres</span></div></div>
+      <div class="s-panel" id="p-retail"><div class="s-img"><img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80&auto=format&fit=crop" alt="Retail"/></div><h3>Retail &amp; Shopping</h3><p>Reducing shrinkage and ensuring customer safety through visible security presence and advanced surveillance integration.</p><div class="s-tags"><span class="s-tag">Shopping Centres</span><span class="s-tag">Supermarkets</span><span class="s-tag">Fashion Retail</span><span class="s-tag">Electronics</span></div></div>
+      <div class="s-panel" id="p-government"><div class="s-img"><img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80&auto=format&fit=crop" alt="Government"/></div><h3>Government Facilities</h3><p>Rigorous protocols and vetted personnel for government buildings, courts, and public infrastructure requiring high-compliance security.</p><div class="s-tags"><span class="s-tag">Council Buildings</span><span class="s-tag">Courts</span><span class="s-tag">Airports</span><span class="s-tag">Public Transport</span></div></div>
+      <div class="s-panel" id="p-healthcare"><div class="s-img"><img src="https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=800&q=80&auto=format&fit=crop" alt="Healthcare"/></div><h3>Healthcare</h3><p>Sensitive, compassionate security for hospitals, clinics, and aged care — protecting patients, staff, and sensitive assets.</p><div class="s-tags"><span class="s-tag">Hospitals</span><span class="s-tag">Clinics</span><span class="s-tag">Aged Care</span><span class="s-tag">Pharmacies</span></div></div>
+      <div class="s-panel" id="p-education"><div class="s-img"><img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80&auto=format&fit=crop" alt="Education"/></div><h3>Education</h3><p>Safe learning environments through access management, campus patrols, and emergency preparedness programs.</p><div class="s-tags"><span class="s-tag">Schools</span><span class="s-tag">Universities</span><span class="s-tag">TAFE</span><span class="s-tag">Child Care</span></div></div>
+      <div class="s-panel" id="p-industrial"><div class="s-img"><img src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=800&q=80&auto=format&fit=crop" alt="Industrial"/></div><h3>Industrial &amp; Manufacturing</h3><p>Safeguarding warehouses, factories, and logistics hubs from theft and unauthorised access with 24/7 guard services.</p><div class="s-tags"><span class="s-tag">Warehouses</span><span class="s-tag">Factories</span><span class="s-tag">Logistics</span><span class="s-tag">Construction</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TESTIMONIALS ══════════════════════ -->
+<section id="testimonials">
+  <div class="t-hdr sr">
+    <div class="eyebrow" style="justify-content:center">Client Testimonials</div>
+    <h2 class="h2" style="margin:0 auto">Trusted by businesses <em>across Sydney</em></h2>
+    <p class="lead" style="margin:12px auto 0">Hear from the clients who rely on SSG to protect their people, assets, and operations every day.</p>
+  </div>
+  <div class="t-wrap">
+    <div class="t-track">
+      <div class="t-card"><div class="t-auth"><div class="t-av"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=88&h=88&fit=crop&crop=face" alt=""/></div><div><div class="t-name">James Hartley</div><div class="t-role">CEO, Hartley Commercial Group</div></div></div><div class="t-stars">★★★★★</div><div class="t-q">"</div><p class="t-txt">SSG transformed our building security. The access control system is seamless and the team responds within minutes. Complete peace of mind.</p></div>
+      <div class="t-card"><div class="t-auth"><div class="t-av"><img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=88&h=88&fit=crop&crop=face" alt=""/></div><div><div class="t-name">Sarah Nguyen</div><div class="t-role">Operations Manager, MedTech NSW</div></div></div><div class="t-stars">★★★★★</div><div class="t-q">"</div><p class="t-txt">Our hospital campus required a highly sensitive approach. SSG delivered exactly that — professional, discreet, and always on call.</p></div>
+      <div class="t-card"><div class="t-auth"><div class="t-av"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=88&h=88&fit=crop&crop=face" alt=""/></div><div><div class="t-name">Michael Chen</div><div class="t-role">Director, Pacific Logistics</div></div></div><div class="t-stars">★★★★★</div><div class="t-q">"</div><p class="t-txt">SSG's 24/7 monitoring across our three Western Sydney warehouses has virtually eliminated after-hours incidents. Highly recommended.</p></div>
+      <div class="t-card"><div class="t-auth"><div class="t-av"><img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=88&h=88&fit=crop&crop=face" alt=""/></div><div><div class="t-name">Amanda Foster</div><div class="t-role">Principal, Westfield Academy</div></div></div><div class="t-stars">★★★★★</div><div class="t-q">"</div><p class="t-txt">SSG worked closely with our staff to implement a plan that parents and students fully trust. Exceptional professionalism.</p></div>
+      <div class="t-card"><div class="t-auth"><div class="t-av"><img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=88&h=88&fit=crop&crop=face" alt=""/></div><div><div class="t-name">Tom Richardson</div><div class="t-role">Event Director, Sydney Live Events</div></div></div><div class="t-stars">★★★★★</div><div class="t-q">"</div><p class="t-txt">We've used SSG for over 40 major events. Professional, well-briefed, and calm under pressure every single time.</p></div>
+      <div class="t-card"><div class="t-auth"><div class="t-av"><img src="https://images.unsplash.com/photo-1548142813-c348350df52b?w=88&h=88&fit=crop&crop=face" alt=""/></div><div><div class="t-name">Priya Sharma</div><div class="t-role">Facilities Head, AusTech Park</div></div></div><div class="t-stars">★★★★★</div><div class="t-q">"</div><p class="t-txt">World-class CCTV and alarm monitoring integration. Full visibility and excellent incident dashboards for our whole campus.</p></div>
+      <div class="t-card"><div class="t-auth"><div class="t-av"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=88&h=88&fit=crop&crop=face" alt=""/></div><div><div class="t-name">David Okafor</div><div class="t-role">GM, Okafor Retail Group</div></div></div><div class="t-stars">★★★★★</div><div class="t-q">"</div><p class="t-txt">Shrinkage across our retail stores has dropped by over 70% since partnering with SSG. Their presence is genuinely deterring.</p></div>
+      <!-- duplicate for loop -->
+      <div class="t-card"><div class="t-auth"><div class="t-av"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=88&h=88&fit=crop&crop=face" alt=""/></div><div><div class="t-name">James Hartley</div><div class="t-role">CEO, Hartley Commercial Group</div></div></div><div class="t-stars">★★★★★</div><div class="t-q">"</div><p class="t-txt">SSG transformed our building security. The access control system is seamless and the team responds within minutes. Complete peace of mind.</p></div>
+      <div class="t-card"><div class="t-auth"><div class="t-av"><img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=88&h=88&fit=crop&crop=face" alt=""/></div><div><div class="t-name">Sarah Nguyen</div><div class="t-role">Operations Manager, MedTech NSW</div></div></div><div class="t-stars">★★★★★</div><div class="t-q">"</div><p class="t-txt">Our hospital campus required a highly sensitive approach. SSG delivered exactly that — professional, discreet, and always on call.</p></div>
+      <div class="t-card"><div class="t-auth"><div class="t-av"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=88&h=88&fit=crop&crop=face" alt=""/></div><div><div class="t-name">Michael Chen</div><div class="t-role">Director, Pacific Logistics</div></div></div><div class="t-stars">★★★★★</div><div class="t-q">"</div><p class="t-txt">SSG's 24/7 monitoring across our three Western Sydney warehouses has virtually eliminated after-hours incidents. Highly recommended.</p></div>
+      <div class="t-card"><div class="t-auth"><div class="t-av"><img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=88&h=88&fit=crop&crop=face" alt=""/></div><div><div class="t-name">Amanda Foster</div><div class="t-role">Principal, Westfield Academy</div></div></div><div class="t-stars">★★★★★</div><div class="t-q">"</div><p class="t-txt">SSG worked closely with our staff to implement a plan that parents and students fully trust. Exceptional professionalism.</p></div>
+      <div class="t-card"><div class="t-auth"><div class="t-av"><img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=88&h=88&fit=crop&crop=face" alt=""/></div><div><div class="t-name">Tom Richardson</div><div class="t-role">Event Director, Sydney Live Events</div></div></div><div class="t-stars">★★★★★</div><div class="t-q">"</div><p class="t-txt">We've used SSG for over 40 major events. Professional, well-briefed, and calm under pressure every single time.</p></div>
+      <div class="t-card"><div class="t-auth"><div class="t-av"><img src="https://images.unsplash.com/photo-1548142813-c348350df52b?w=88&h=88&fit=crop&crop=face" alt=""/></div><div><div class="t-name">Priya Sharma</div><div class="t-role">Facilities Head, AusTech Park</div></div></div><div class="t-stars">★★★★★</div><div class="t-q">"</div><p class="t-txt">World-class CCTV and alarm monitoring integration. Full visibility and excellent incident dashboards for our whole campus.</p></div>
+      <div class="t-card"><div class="t-auth"><div class="t-av"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=88&h=88&fit=crop&crop=face" alt=""/></div><div><div class="t-name">David Okafor</div><div class="t-role">GM, Okafor Retail Group</div></div></div><div class="t-stars">★★★★★</div><div class="t-q">"</div><p class="t-txt">Shrinkage across our retail stores has dropped by over 70% since partnering with SSG. Their presence is genuinely deterring.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ══════════════════════════════ -->
+<section id="cta">
+  <div class="sr">
+    <h2>Ready to secure your <em>business?</em></h2>
+    <p>Our team is available 24/7. Get a no-obligation security assessment today.</p>
+    <div class="cta-btns">
+      <a href="#contact" class="btn-fill" style="font-size:15px;padding:15px 32px">Get a Free Quote <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      <a href="tel:1300859424" class="cta-tel">&#128222; 1300 859 424</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CERTIFICATIONS ════════════════════ -->
+<section id="certifications">
+  <div class="sr">
+    <div class="eyebrow">Verified &amp; Trusted</div>
+    <h2 class="h2">Affiliations &amp; <em>Certifications</em></h2>
+  </div>
+  <div class="cert-layout">
+    <div class="cert-list">
+      <div class="cert-item sr"><span class="cert-n">01</span><div class="cert-body"><strong>ASIAL Member</strong><span>Australian Security Industry Association Limited — upholding the highest professional standards in the security industry.</span></div></div>
+      <div class="cert-item sr" style="transition-delay:.07s"><span class="cert-n">02</span><div class="cert-body"><strong>ISO 9001:2015 — Quality Management</strong><span>Certified Quality Management System ensuring services consistently meet client and regulatory requirements.</span></div></div>
+      <div class="cert-item sr" style="transition-delay:.14s"><span class="cert-n">03</span><div class="cert-body"><strong>ISO 45001:2018 — Work Health &amp; Safety</strong><span>Occupational Health &amp; Safety Management System certified — prioritising wellbeing on every engagement.</span></div></div>
+      <div class="cert-item sr" style="transition-delay:.21s"><span class="cert-n">04</span><div class="cert-body"><strong>ISO 14001:2015 — Environmental</strong><span>Environmental Management System certified — demonstrating our commitment to responsible operations.</span></div></div>
+      <div class="cert-item sr" style="transition-delay:.28s"><span class="cert-n">05</span><div class="cert-body"><strong>Master Licence M/L 000 102 484</strong><span>Fully licensed security agent operating legally and professionally across NSW and all Australian states.</span></div></div>
+      <div class="cert-item sr" style="transition-delay:.35s"><span class="cert-n">06</span><div class="cert-body"><strong>Fully Insured Operations</strong><span>Comprehensive public liability and professional indemnity insurance protecting our clients at all times.</span></div></div>
+    </div>
+    <div class="cert-vis sr2">
+      <div class="cert-card">
+        <div class="eyebrow">Our Commitment</div>
+        <h3>Certified to the highest Australian standards</h3>
+        <p>Every engagement is backed by industry certifications, a licensed team, and an unwavering commitment to excellence.</p>
+        <div class="cert-badges">
+          <div class="cbadge"><div class="cbadge-ico">🏅</div><div class="cbadge-name">ASIAL</div></div>
+          <div class="cbadge"><div class="cbadge-ico">✅</div><div class="cbadge-name">ISO 9001</div></div>
+          <div class="cbadge"><div class="cbadge-ico">🔒</div><div class="cbadge-name">ISO 45001</div></div>
+          <div class="cbadge"><div class="cbadge-ico">🌿</div><div class="cbadge-name">ISO 14001</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ════════════════════════════ -->
+<section id="contact">
+  <div class="con-l sl">
+    <div class="eyebrow">Get In Touch</div>
+    <h2>Request a <em>free quote</em></h2>
+    <p>Tell us about your security needs. Our consultants will provide a tailored, cost-effective solution — no obligation.</p>
+    <div class="c-list">
+      <div class="c-item"><div class="c-ico">&#128222;</div><div class="c-body"><strong>Phone</strong><span>1300 859 424</span></div></div>
+      <div class="c-item"><div class="c-ico">&#9993;</div><div class="c-body"><strong>Email</strong><span>contact@ssgaust.com.au</span></div></div>
+      <div class="c-item"><div class="c-ico">&#128205;</div><div class="c-body"><strong>Address</strong><span>2/11 Kitchener Pde, Bankstown NSW 2200</span></div></div>
+      <div class="c-item"><div class="c-ico">&#128336;</div><div class="c-body"><strong>Availability</strong><span>24/7 — 365 days a year</span></div></div>
+    </div>
+  </div>
+  <div class="sr2">
+    <div class="con-form">
+      <div class="con-f-wrap">
+        <div class="f-grid">
+          <div class="fg"><label>First Name</label><input type="text" placeholder="John"></div>
+          <div class="fg"><label>Last Name</label><input type="text" placeholder="Smith"></div>
+          <div class="fg"><label>Email</label><input type="email" placeholder="john@company.com"></div>
+          <div class="fg"><label>Phone</label><input type="tel" placeholder="04XX XXX XXX"></div>
+          <div class="fg full"><label>Company</label><input type="text" placeholder="Your company name"></div>
+          <div class="fg full"><label>Service Required</label>
+            <select>
+              <option value="">Select a service...</option>
+              <option>Security Consulting</option>
+              <option>Guarding &amp; Patrol Services</option>
+              <option>Alarm Monitoring &amp; Response</option>
+              <option>Surveillance Systems</option>
+              <option>Access Control Systems</option>
+              <option>Special Event Security</option>
+              <option>Risk Assessment &amp; Management</option>
+              <option>Emergency Response Planning</option>
+              <option>Cybersecurity Solutions</option>
+              <option>Training &amp; Education</option>
+              <option>Multiple Services</option>
+            </select>
+          </div>
+          <div class="fg full"><label>Message</label><textarea placeholder="Tell us about your security requirements..."></textarea></div>
+        </div>
+        <button class="btn-sub" onclick="submitForm(this)">Send Enquiry <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ RECON ══════════════════════════════ -->
+<div id="recon">
+  <div class="recon-in sr">
+    <div class="r-flags">
+      <div class="rflag"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Flag_of_Australia.svg/200px-Flag_of_Australia.svg.png" alt="Australia"/></div>
+      <div class="rflag"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Australian_Aboriginal_Flag.svg/200px-Australian_Aboriginal_Flag.svg.png" alt="Aboriginal"/></div>
+      <div class="rflag"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Flag_of_the_Torres_Strait_Islanders.svg/200px-Flag_of_the_Torres_Strait_Islanders.svg.png" alt="Torres Strait"/></div>
+    </div>
+    <div class="r-txt">
+      <h5>Acknowledgement of Country</h5>
+      <p>In the spirit of reconciliation, SSG acknowledges the Traditional Custodians of Country throughout Australia and their connections to land, sea and community. We pay our respect to their Elders past and present.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ═════════════════════════════ -->
+<footer>
+  <div class="ft">
+    <div class="fb">
+      <div class="fn">SS<em>G</em></div>
+      <p>Sydney's trusted security partner. Licensed, insured, and committed to protecting what matters most.</p>
+      <p style="margin-top:8px;font-size:11px;color:rgba(255,255,255,.14)">M/L 000 102 484 &nbsp;·&nbsp; Sydney Management Services Australia Pty Ltd</p>
+    </div>
+    <div class="fc">
+      <h5>Services</h5>
+      <ul>
+        <li><a href="#services">Security Consulting</a></li>
+        <li><a href="#services">Guarding &amp; Patrol</a></li>
+        <li><a href="#services">Alarm Monitoring</a></li>
+        <li><a href="#services">Surveillance</a></li>
+        <li><a href="#services">Access Control</a></li>
+        <li><a href="#services">Event Security</a></li>
+      </ul>
+    </div>
+    <div class="fc">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="#about">About SSG</a></li>
+        <li><a href="#sectors">Sectors</a></li>
+        <li><a href="#certifications">Certifications</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms &amp; Conditions</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="fb-bot">
+    <p>&#169; 2025 Spotless Services Group. All rights reserved.</p>
+    <span>24/7 Available &nbsp;·&nbsp; 1300 859 424</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+/* ── CURSOR ──────────────────────────────────── */
+var cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+var mx=0,my=0,rx=0,ry=0;
+if(window.matchMedia('(pointer:fine)').matches){
+  cur.style.display='block'; ring.style.display='block';
+  document.body.style.cursor='none';
+  document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+  (function tick(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick);})();
+}
+
+/* ── HERO BACKGROUND + SLIDE CYCLE ──────────── */
+var bgs=[document.getElementById('bg0'),document.getElementById('bg1'),document.getElementById('bg2'),document.getElementById('bg3')];
+var slides=[document.getElementById('hs0'),document.getElementById('hs1'),document.getElementById('hs2'),document.getElementById('hs3')];
+var dots=document.querySelectorAll('.hdot');
+var current=0;
+var TOTAL=bgs.length;
+
+function goTo(idx){
+  // backgrounds
+  bgs[current].classList.remove('active');
+  slides[current].classList.remove('active');
+  slides[current].classList.add('exit');
+  var prev=current;
+  current=idx;
+  bgs[current].classList.add('active');
+  // small delay so exit animation plays
+  setTimeout(function(){slides[prev].classList.remove('exit');},900);
+  slides[current].classList.add('active');
+  // dots
+  dots.forEach(function(d,i){d.classList.toggle('active',i===current);});
+}
+
+// auto-advance every 6s
+var heroTimer=setInterval(function(){goTo((current+1)%TOTAL);},6000);
+
+// dot click
+dots.forEach(function(d){
+  d.addEventListener('click',function(){
+    clearInterval(heroTimer);
+    goTo(parseInt(d.dataset.i));
+    heroTimer=setInterval(function(){goTo((current+1)%TOTAL);},6000);
+  });
+});
+
+// Ken Burns zoom on active bg
+function applyKenBurns(){
+  bgs.forEach(function(bg,i){
+    bg.style.transform=i===current?'scale(1.06)':'scale(1)';
+    bg.style.transition=i===current?'transform 7s ease':'transform 1.4s ease';
+  });
+}
+applyKenBurns();
+bgs.forEach(function(bg,i){
+  bg.addEventListener('transitionend',function(e){if(e.propertyName==='opacity'&&bg.classList.contains('active'))applyKenBurns();});
+});
+
+/* ── NAV SCROLL ──────────────────────────────── */
+window.addEventListener('scroll',onScroll,{passive:true});
+function onScroll(){
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60);
+  update3D();
+}
+
+/* ── MOBILE MENU ─────────────────────────────── */
+var hamBtn=document.getElementById('ham'),mob=document.getElementById('mob');
+hamBtn.addEventListener('click',function(){
+  var open=mob.classList.toggle('open');
+  var s=hamBtn.querySelectorAll('span');
+  if(open){s[0].style.transform='translateY(7px) rotate(45deg)';s[1].style.opacity='0';s[2].style.transform='translateY(-7px) rotate(-45deg)';}
+  else{s[0].style.transform='';s[1].style.opacity='';s[2].style.transform='';}
+});
+document.querySelectorAll('.mob-l').forEach(function(a){a.addEventListener('click',function(){mob.classList.remove('open');var s=hamBtn.querySelectorAll('span');s[0].style.transform='';s[1].style.opacity='';s[2].style.transform='';});});
+
+/* ── SCROLL REVEAL ───────────────────────────── */
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('in');});
+},{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.sr,.sl,.sr2').forEach(function(el){obs.observe(el);});
+
+/* ── SERVICES DRAG + ARROWS ──────────────────── */
+var st=document.getElementById('svc-t');
+var isD=false,sX,sL;
+st.addEventListener('mousedown',function(e){isD=true;st.style.cursor='grabbing';sX=e.pageX-st.offsetLeft;sL=st.scrollLeft;});
+['mouseleave','mouseup'].forEach(function(ev){st.addEventListener(ev,function(){isD=false;st.style.cursor='grab';});});
+st.addEventListener('mousemove',function(e){if(!isD)return;e.preventDefault();st.scrollLeft=sL-(e.pageX-st.offsetLeft-sX);});
+st.addEventListener('touchstart',function(e){sX=e.touches[0].pageX;sL=st.scrollLeft;},{passive:true});
+st.addEventListener('touchmove',function(e){st.scrollLeft=sL-(e.touches[0].pageX-sX);},{passive:true});
+document.getElementById('sp').addEventListener('click',function(){st.scrollBy({left:-300,behavior:'smooth'});});
+document.getElementById('sn').addEventListener('click',function(){st.scrollBy({left:300,behavior:'smooth'});});
+
+/* ── 3D SCROLL CARD ──────────────────────────── */
+var scOuter=document.querySelector('.sc-outer'),scCard=document.getElementById('sc-card'),scHead=document.getElementById('sc-head');
+function lerp(a,b,p){return a+(b-a)*p;}
+function update3D(){
+  if(!scOuter||!scCard)return;
+  var rect=scOuter.getBoundingClientRect();
+  var total=scOuter.offsetHeight-window.innerHeight;
+  if(total<=0){scCard.style.transform='none';scCard.style.opacity='1';return;}
+  var prog=Math.max(0,Math.min(1,-rect.top/total));
+  scCard.style.transform='rotateX('+lerp(22,0,prog)+'deg) scale('+lerp(.84,1,prog)+') translateY('+lerp(60,0,prog)+'px)';
+  scCard.style.opacity=String(Math.min(1,prog*1.9));
+  scHead.style.transform='translateY('+lerp(0,-80,prog)+'px)';
+  scHead.style.opacity=String(Math.max(0,1-prog*2.5));
+}
+window.addEventListener('load',update3D);
+
+/* ── SECTORS ─────────────────────────────────── */
+document.querySelectorAll('.s-tab').forEach(function(tab){
+  tab.addEventListener('click',function(){
+    document.querySelectorAll('.s-tab').forEach(function(t){t.classList.remove('active');});
+    document.querySelectorAll('.s-panel').forEach(function(p){p.classList.remove('active');});
+    tab.classList.add('active');
+    var panel=document.getElementById('p-'+tab.dataset.p);
+    if(panel)panel.classList.add('active');
+  });
+});
+
+/* ── FORM SUBMIT ─────────────────────────────── */
+window.submitForm=function(btn){
+  btn.innerHTML='<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Enquiry Sent!';
+  btn.style.background='#16a34a';btn.disabled=true;
+  setTimeout(function(){
+    btn.innerHTML='Send Enquiry <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+    btn.style.background='';btn.disabled=false;
+  },3500);
+};
+
+})();
+</script>
+</body>
+</html>
